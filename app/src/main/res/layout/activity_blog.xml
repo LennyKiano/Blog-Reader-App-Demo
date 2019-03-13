@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.leonkianoapps.d4a.leonard.BlogActivity">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/blog_toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/AppToolbar"
+    />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:id="@+id/description_layout"
+                  android:layout_below="@id/blog_toolBar"
+                  android:background="@color/colorPrimary"
+    >
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/blog_view_title"
+                  android:text="@string/blog_title"
+                  android:textColor="@android:color/white"
+                  android:textStyle="bold"
+                  android:textSize="20sp"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginTop="8dp"
+
+        />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/blog_view_author"
+                  android:text="@string/author"
+                  android:textSize="18sp"
+                  android:textColor="@android:color/white"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginTop="8dp"
+
+        />
+
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/blog_view_date"
+                  android:text="@string/date"
+                  android:textSize="16sp"
+                  android:textColor="@android:color/white"
+
+                  android:textStyle="italic"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginBottom="8dp"
+
+        />
+
+    </LinearLayout>
+
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description_layout"
+                android:layout_margin="4dp"
+    >
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="@string/blog_content"
+                  android:textSize="14sp"
+                  android:id="@+id/blogContentTextView"
+
+        />
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

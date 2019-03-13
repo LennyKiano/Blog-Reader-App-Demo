@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">D4A Leonard</string>
+    <string name="recent_posts">Recent Posts</string>
+    <string name="About_us">About</string>
+    <string name="all_posts">All Posts</string>
+    <string name="App_title">Digital4Africa Leonard Blog Reader</string>
+    <string name="blog_title">Blog Title</string>
+    <string name="author">Author</string>
+    <string name="date">11/11/2011</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="blog_content">Blog Content</string>
+    <string name="error_message">Check your Internet Connection and Try Again to load the blogs</string>
+    <string name="launcherTitle">D4A Leonard</string>
+</resources>
