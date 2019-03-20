@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         //Swipe to Refresh Layout init
+        swipeLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary,R.color.colorAccent)
 
         swipeLayout.setOnRefreshListener {
             initialLaunch = false
