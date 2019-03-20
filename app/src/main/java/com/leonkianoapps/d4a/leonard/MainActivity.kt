@@ -30,6 +30,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private var drawerToggle: ActionBarDrawerToggle? = null
 
+    private var initialLaunch = true
+
+    var adapter : RecyclerViewCustomAdapter? = null
+
+
 
 
 
@@ -52,6 +57,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             errorMessageTextView.visibility =  View.INVISIBLE
 
         }else{ showNetworkNotFoundInfo() }
+
+
+
+        //Swipe to Refresh Layout init
+
+        swipeLayout.setOnRefreshListener {
+            initialLaunch = false
+            getData()
+        }
 
 
 
@@ -81,93 +95,192 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun getData() {
 
-        //show progress bar and SnackBar while data is being fetched
+        if (initialLaunch){
 
-        progress_circular.visibility = View.VISIBLE
+            //show progress bar and snack bar on launch
+            //show progress bar and SnackBar while data is being fetched
 
-        showSnack("Loading...")
+            progress_circular.visibility = View.VISIBLE
 
-        //Using OkHttp Lib
+            showSnack("Loading...")
 
-        val client = OkHttpClient()
+            //Using OkHttp Lib
 
-        val url = "https://digital4africa.com/api/get_recent_posts/"
+            val client = OkHttpClient()
 
-        val request: okhttp3.Request = okhttp3.Request.Builder().url(url).build()
+            val url = "https://digital4africa.com/api/get_recent_posts/"
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
+            val request: okhttp3.Request = okhttp3.Request.Builder().url(url).build()
 
-                showToast("OKHTTP FAIL")
-            }
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
 
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-
-                if (response.isSuccessful) {
-
-                    val jsonObject = JSONObject(response.body()?.string()) //creating a JSONObject From the response
-
-                    val jsonArray = jsonObject.getJSONArray("posts") //creating a JSONArray to get the post
-
-                    var blogTitle = ""
-                    var blogDate = ""
-                    var blogAuth = ""
-                    var blogcontent = ""
-
-                    for (element in 0 until jsonArray.length()) {  //looping through the array to get the blog info
-
-                        val jsonInner: JSONObject = jsonArray.getJSONObject(element)
-
-                        blogTitle = jsonInner.getString("title")
-                        blogDate = jsonInner.getString("date")
-                        blogcontent = jsonInner.getString("content")
-
-                        val jsonObjectAuthor = jsonInner.getJSONObject("author")
-
-                        blogAuth = jsonObjectAuthor.getString("name")
-
-
-                        val postInfo = PostBasicInfo(blogTitle, blogDate, blogAuth, blogcontent)
-
-
-                        postsInfoArrayList.add(postInfo)   //adding info to arrayList for RecyclerView Adapter
-
-
-                    }
-
-
-
-
-                    runOnUiThread(   //we have to run to the main ui since enqueue runs in the background
-                        object : Runnable {
-                            override fun run() {
-
-                                //Hide progress bar while data is being fetched
-
-                                progress_circular.visibility = View.INVISIBLE
-
-                                initializeRecyclerView(postsInfoArrayList)
-
-
-                            }
-                        }
-                    )
-
-                } else {
-
-                    runOnUiThread(
-                        object : Runnable {
-                            override fun run() {
-
-                                showToast("OK_HTTP2 FAIL")
-
-                            }
-                        }
-                    )
+                    showToast("OKHTTP FAIL")
                 }
 
-            }
-        })
+                override fun onResponse(call: Call, response: okhttp3.Response) {
+
+                    if (response.isSuccessful) {
+
+                        val jsonObject = JSONObject(response.body()?.string()) //creating a JSONObject From the response
+
+                        val jsonArray = jsonObject.getJSONArray("posts") //creating a JSONArray to get the post
+
+                        var blogTitle = ""
+                        var blogDate = ""
+                        var blogAuth = ""
+                        var blogcontent = ""
+
+                        for (element in 0 until jsonArray.length()) {  //looping through the array to get the blog info
+
+                            val jsonInner: JSONObject = jsonArray.getJSONObject(element)
+
+                            blogTitle = jsonInner.getString("title")
+                            blogDate = jsonInner.getString("date")
+                            blogcontent = jsonInner.getString("content")
+
+                            val jsonObjectAuthor = jsonInner.getJSONObject("author")
+
+                            blogAuth = jsonObjectAuthor.getString("name")
+
+
+                            val postInfo = PostBasicInfo(blogTitle, blogDate, blogAuth, blogcontent)
+
+
+                            postsInfoArrayList.add(postInfo)   //adding info to arrayList for RecyclerView Adapter
+
+
+                        }
+
+
+
+
+                        runOnUiThread(   //we have to run to the main ui since enqueue runs in the background
+                            object : Runnable {
+                                override fun run() {
+
+                                    //Hide progress bar while data is being fetched
+
+                                    progress_circular.visibility = View.INVISIBLE
+
+                                    initializeRecyclerView(postsInfoArrayList)
+
+
+                                }
+                            }
+                        )
+
+                    } else {
+
+                        runOnUiThread(
+                            object : Runnable {
+                                override fun run() {
+
+                                    showToast("OK_HTTP2 FAIL")
+
+                                }
+                            }
+                        )
+                    }
+
+                }
+            })
+
+
+        } else {
+
+            //swipe to refresh was triggered therefore get new data
+
+
+            //Using OkHttp Lib
+
+            val client = OkHttpClient()
+
+            val url = "https://digital4africa.com/api/get_recent_posts/"
+
+            val request: okhttp3.Request = okhttp3.Request.Builder().url(url).build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+
+                    showToast("OKHTTP FAIL")
+                }
+
+                override fun onResponse(call: Call, response: okhttp3.Response) {
+
+                    if (response.isSuccessful) {
+
+                        val jsonObject = JSONObject(response.body()?.string()) //creating a JSONObject From the response
+
+                        val jsonArray = jsonObject.getJSONArray("posts") //creating a JSONArray to get the post
+
+                        var blogTitle = ""
+                        var blogDate = ""
+                        var blogAuth = ""
+                        var blogcontent = ""
+
+                        for (element in 0 until jsonArray.length()) {  //looping through the array to get the blog info
+
+                            val jsonInner: JSONObject = jsonArray.getJSONObject(element)
+
+                            blogTitle = jsonInner.getString("title")
+                            blogDate = jsonInner.getString("date")
+                            blogcontent = jsonInner.getString("content")
+
+                            val jsonObjectAuthor = jsonInner.getJSONObject("author")
+
+                            blogAuth = jsonObjectAuthor.getString("name")
+
+
+                            val postInfo = PostBasicInfo(blogTitle, blogDate, blogAuth, blogcontent)
+
+
+                            postsInfoArrayList.add(postInfo)   //adding info to arrayList for RecyclerView Adapter
+
+
+                        }
+
+
+
+
+                        runOnUiThread(   //we have to run to the main ui since enqueue runs in the background
+                            object : Runnable {
+                                override fun run() {
+
+                                    //stop showing swipe loader
+                                     swipeLayout.isRefreshing = false
+
+                                    //notify adapter that data has changed
+
+                                    adapter?.notifyDataSetChanged()
+
+//                                    initializeRecyclerView(postsInfoArrayList)
+
+
+                                }
+                            }
+                        )
+
+                    } else {
+
+                        runOnUiThread(
+                            object : Runnable {
+                                override fun run() {
+
+                                    showToast("OK_HTTP2 FAIL")
+
+                                }
+                            }
+                        )
+                    }
+
+                }
+            })
+
+
+        }
+
+
 
 
     }
@@ -184,7 +297,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         posts_recyclerView.setHasFixedSize(true)  //since the size of the RecyclerView doesn't depend on the adapter content
 
-        val adapter = RecyclerViewCustomAdapter(arrayList, this@MainActivity, main_UI_layout)
+         adapter = RecyclerViewCustomAdapter(arrayList, this@MainActivity, main_UI_layout)
 
         posts_recyclerView.adapter = adapter
 
