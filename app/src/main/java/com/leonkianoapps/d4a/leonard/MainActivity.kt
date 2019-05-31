@@ -311,11 +311,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val linearLayoutManger = LinearLayoutManager(this@MainActivity)
 
-        val itemDecoration = DividerItemDecoration(this, linearLayoutManger.orientation) //For the Divider
 
         posts_recyclerView.layoutManager = linearLayoutManger
 
-        posts_recyclerView.addItemDecoration(itemDecoration)
 
         posts_recyclerView.setHasFixedSize(true)  //since the size of the RecyclerView doesn't depend on the adapter content
 
